@@ -18,4 +18,11 @@
       <p>无截图</p>
     {{/if}}
   </div>
+  {{#if user}}
+    {{#ifCond user.id '===' app.user_id}}
+      <form action="/app/{{app.id}}/delete" method="post">
+        <button type="submit" onclick="return confirm('确定要删除此应用吗？')">删除应用</button>
+      </form>
+    {{/ifCond}}
+  {{/if}}
 </div>

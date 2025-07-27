@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const upload = require('../config/storage').upload; // 从 storage.js 导入 upload 中间件
+const fs = require('fs').promises;
+const path = require('path');
 
 // 首页 - 显示所有应用
 router.get('/', async (req, res) => {
@@ -56,6 +58,38 @@ router.post('/upload', upload.fields([
     'INSERT INTO apps (name, description, icon, screenshots, file, user_id) VALUES (?, ?, ?, ?, ?, ?)',
     [name, description, icon, JSON.stringify(screenshots), appFile, req.session.user.id]
   );
+  res.redirect('/');
+});
+
+// 处理应用删除
+router.post('/app/:id/delete', async (req, res) => {
+  if (!req.session.user) {
+    return res.redirect('/login');
+  }
+  const [apps] = await req.app.locals.db.query('SELECT * FROM apps WHERE id = ?', [req.params.id]);
+  if (apps.length === 0) {
+    return res.status(404).send('App not found');
+  }
+  const app = apps[0];
+  if (app.user_id !== req.session.user.id) {
+    return res.status(403).send('Unauthorized: You can only delete your own apps');
+  }
+
+  // 删除文件
+  if (app.file) {
+    await fs.unlink(path.join(__dirname, '../public/uploads/apps', app.file)).catch(err => console.error('Failed to delete app file:', err));
+  }
+  if (app.icon) {
+    await fs.unlink(path.join(__dirname, '../public/uploads/icons', app.icon)).catch(err => console.error('Failed to delete icon:', err));
+  }
+  if (app.screenshots) {
+    for (const screenshot of JSON.parse(app.screenshots)) {
+      await fs.unlink(path.join(__dirname, '../public/uploads/screenshots', screenshot)).catch(err => console.error('Failed to delete screenshot:', err));
+    }
+  }
+
+  // 删除数据库记录
+  await req.app.locals.db.query('DELETE FROM apps WHERE id = ?', [req.params.id]);
   res.redirect('/');
 });
 

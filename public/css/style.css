@@ -45,3 +45,7 @@ button {
   border: none;
   cursor: pointer;
 }
+button[type="submit"] {
+  background: #ff4444;
+  margin-top: 10px;
+}
