@@ -1,19 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
-const multer = require('multer');
-
-// 文件上传配置
-const upload = multer({
-  dest: 'public/uploads/',
-  fileFilter: (req, file, cb) => {
-    if (file.fieldname === 'appFile' || file.mimetype.startsWith('image/')) {
-      cb(null, true);
-    } else {
-      cb(new Error('Invalid file type for application file'));
-    }
-  }
-});
+const upload = require('../config/storage').upload; // 从 storage.js 导入 upload 中间件
 
 // 首页 - 显示所有应用
 router.get('/', async (req, res) => {

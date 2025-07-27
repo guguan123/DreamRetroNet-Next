@@ -5,25 +5,8 @@ const path = require('path');
 const bcrypt = require('bcrypt');
 const session = require('express-session');
 const multer = require('multer');
-const dbConfig = require('./config/db'); // 引入数据库配置
+const dbConfig = require('./config/db');
 const app = express();
-
-// Multer 配置用于文件上传
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    if (file.fieldname === 'icon') {
-      cb(null, 'public/uploads/icons/');
-    } else if (file.fieldname === 'screenshots') {
-      cb(null, 'public/uploads/screenshots/');
-    } else if (file.fieldname === 'appFile') {
-      cb(null, 'public/uploads/apps/');
-    }
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
-  }
-});
-const upload = multer({ storage });
 
 // 中间件
 app.use(express.urlencoded({ extended: true }));
