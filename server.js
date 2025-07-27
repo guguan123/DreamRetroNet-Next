@@ -20,8 +20,10 @@ const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     if (file.fieldname === 'icon') {
       cb(null, 'public/uploads/icons/');
-    } else {
+    } else if (file.fieldname === 'screenshots') {
       cb(null, 'public/uploads/screenshots/');
+    } else if (file.fieldname === 'appFile') {
+      cb(null, 'public/uploads/apps/');
     }
   },
   filename: (req, file, cb) => {
@@ -63,6 +65,7 @@ async function initDb() {
       description TEXT,
       icon VARCHAR(255),
       screenshots JSON,
+      file VARCHAR(255) NOT NULL,
       user_id INT,
       FOREIGN KEY (user_id) REFERENCES users(id)
     )

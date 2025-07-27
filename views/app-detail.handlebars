@@ -1,11 +1,21 @@
 <h1>{{app.name}}</h1>
 <div class="app-detail">
-  <img src="/uploads/icons/{{app.icon}}" alt="{{app.name}}" width="150">
+  {{#if app.icon}}
+    <img src="/uploads/icons/{{app.icon}}" alt="{{app.name}}" width="150">
+  {{else}}
+    <p>无图标</p>
+  {{/if}}
   <p>{{app.description}}</p>
+  <h3>下载</h3>
+  <a href="/uploads/apps/{{app.file}}" download>下载应用</a>
   <h3>截图</h3>
   <div class="screenshots">
-    {{#each app.screenshots}}
-      <img src="/uploads/screenshots/{{this}}" alt="Screenshot" width="200">
-    {{/each}}
+    {{#if app.screenshots}}
+      {{#each app.screenshots}}
+        <img src="/uploads/screenshots/{{this}}" alt="Screenshot" width="200">
+      {{/each}}
+    {{else}}
+      <p>无截图</p>
+    {{/if}}
   </div>
 </div>

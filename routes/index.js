@@ -7,10 +7,10 @@ const multer = require('multer');
 const upload = multer({
   dest: 'public/uploads/',
   fileFilter: (req, file, cb) => {
-    if (file.mimetype.startsWith('image/')) {
+    if (file.fieldname === 'appFile' || file.mimetype.startsWith('image/')) {
       cb(null, true);
     } else {
-      cb(new Error('Only images are allowed'));
+      cb(new Error('Invalid file type for application file'));
     }
   }
 });
@@ -49,7 +49,8 @@ router.get('/upload', (req, res) => {
 // 处理应用上传
 router.post('/upload', upload.fields([
   { name: 'icon', maxCount: 1 },
-  { name: 'screenshots', maxCount: 5 }
+  { name: 'screenshots', maxCount: 5 },
+  { name: 'appFile', maxCount: 1 }
 ]), async (req, res) => {
   if (!req.session.user) {
     return res.redirect('/login');
@@ -57,10 +58,15 @@ router.post('/upload', upload.fields([
   const { name, description } = req.body;
   const icon = req.files['icon'] ? req.files['icon'][0].filename : null;
   const screenshots = req.files['screenshots'] ? req.files['screenshots'].map(f => f.filename) : [];
+  const appFile = req.files['appFile'] ? req.files['appFile'][0].filename : null;
+
+  if (!appFile) {
+    return res.render('upload', { layout: 'main', user: req.session.user, error: 'Application file is required' });
+  }
   
   await req.app.locals.db.query(
-    'INSERT INTO apps (name, description, icon, screenshots, user_id) VALUES (?, ?, ?, ?, ?)',
-    [name, description, icon, JSON.stringify(screenshots), req.session.user.id]
+    'INSERT INTO apps (name, description, icon, screenshots, file, user_id) VALUES (?, ?, ?, ?, ?, ?)',
+    [name, description, icon, JSON.stringify(screenshots), appFile, req.session.user.id]
   );
   res.redirect('/');
 });
