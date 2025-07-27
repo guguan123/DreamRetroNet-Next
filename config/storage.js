@@ -1,4 +1,5 @@
 const multer = require('multer');
+const path = require('path');
 
 // Multer 配置用于文件上传
 const storage = multer.diskStorage({
