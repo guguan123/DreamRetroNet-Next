@@ -1,0 +1,12 @@
+<h1>上传应用</h1>
+<form action="/upload" method="post" enctype="multipart/form-data">
+  <label for="name">应用名称:</label>
+  <input type="text" id="name" name="name" required>
+  <label for="description">应用简介:</label>
+  <textarea id="description" name="description" required></textarea>
+  <label for="icon">应用图标:</label>
+  <input type="file" id="icon" name="icon" accept="image/*" required>
+  <label for="screenshots">应用截图（最多5张）:</label>
+  <input type="file" id="screenshots" name="screenshots" accept="image/*" multiple>
+  <button type="submit">上传</button>
+</form>

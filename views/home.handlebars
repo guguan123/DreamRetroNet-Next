@@ -1,0 +1,13 @@
+<h1>应用商店</h1>
+<div class="app-grid">
+  {{#each apps}}
+    <div class="app-card">
+      <a href="/app/{{this.id}}">
+        <img src="/uploads/icons/{{this.icon}}" alt="{{this.name}}" width="100">
+        <h3>{{this.name}}</h3>
+      </a>
+    </div>
+  {{else}}
+    <p>暂无应用</p>
+  {{/each}}
+</div>
