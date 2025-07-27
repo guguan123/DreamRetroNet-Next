@@ -83,7 +83,7 @@ router.post('/app/:id/delete', async (req, res) => {
     await fs.unlink(path.join(__dirname, '../public/uploads/icons', app.icon)).catch(err => console.error('Failed to delete icon:', err));
   }
   if (app.screenshots) {
-    for (const screenshot of JSON.parse(app.screenshots)) {
+    for (const screenshot of app.screenshots) {
       await fs.unlink(path.join(__dirname, '../public/uploads/screenshots', screenshot)).catch(err => console.error('Failed to delete screenshot:', err));
     }
   }
