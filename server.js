@@ -5,15 +5,8 @@ const path = require('path');
 const bcrypt = require('bcrypt');
 const session = require('express-session');
 const multer = require('multer');
+const dbConfig = require('./config/db'); // 引入数据库配置
 const app = express();
-
-// MySQL 连接配置
-const dbConfig = {
-  host: 'localhost',
-  user: 'root',
-  password: 'your_password',
-  database: 'app_store'
-};
 
 // Multer 配置用于文件上传
 const storage = multer.diskStorage({
